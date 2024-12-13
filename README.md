@@ -1,6 +1,6 @@
 # com.joineryhq.reasonable
 
-## CiviCRM extension: "Be Reasonable": supports altering site-wide CiviCRM behaviors to something "more reasonable", IMHO.
+## CiviCRM "Be Reasonable" extensoin: supports altering site-wide CiviCRM behaviors to something "more reasonable", IMHO.
 
 This extension offers the ability to alter some CiviCRM behaviors on a site-wide
 basis. Each alteration must be specifically enabled in the extension settings.
