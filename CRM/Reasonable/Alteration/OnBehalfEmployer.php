@@ -5,14 +5,11 @@
  *
  * @author as
  */
-class CRM_Reasonable_Alteration_OnBehalfEmployer {
+class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alteration {
   
-  var $isEnabled = FALSE;
-  
-  function __construct() {
-    $this->isEnabled = Civi::settings()->get('reasonable_preserve_employer_on_behalf');
-  }
-  
+  protected $title = 'Do not update Current Employer when an "On Behalf Of" contribution is submitted.';
+  protected $description = 'For contribution pages configured to allow contribution  "On Behalf Of" an organiztion: when such an "On Behalf Of" contribution is submitted, CiviCRM will, by design, set the given organization as the individual donor\'s "Current Employer." This implies that an individual would only ever contribute "On Behalf Of" their current employer. Enabling this option will prevent CiviCRM from modifying the "Current Employer" relationship in this way.';
+
   /**
    * Event listener for hook_civicrm_preProcess().
    *
@@ -48,5 +45,5 @@ class CRM_Reasonable_Alteration_OnBehalfEmployer {
         CRM_Contact_BAO_Contact_Utils::setCurrentEmployer($currentEmpParams);
       }
     }  
-}
+  }
 }
