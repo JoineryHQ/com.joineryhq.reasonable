@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="com.joineryhq.reasonable" type="module">
   <file>reasonable</file>
-  <name>com.joineryhq.reasonable</name>
-  <description>Be Reasonable</description>
+  <name>Be Reasonable</name>
+  <description>Supports altering site-wide CiviCRM behaviors to something "more reasonable".</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Allen Shaw</author>
@@ -34,5 +34,8 @@
     <mixin>mgd-php@1.0.0</mixin>
     <mixin>setting-php@1.0.0</mixin>
     <mixin>smarty-v2@1.0.1</mixin>
+    <mixin>menu-xml@1.0.0</mixin>
+    <mixin>setting-admin@1.0.1</mixin>
   </mixins>
+  <upgrader>CRM_Reasonable_Upgrader</upgrader>
 </extension>
