@@ -37,8 +37,10 @@ function reasonable_civicrm_enable(): void {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
  */
 function reasonable_civicrm_preProcess(string $formName, \CRM_Core_Form $form): void {
-  $onBehalfEmployer = new CRM_Reasonable_Alteration_OnBehalfEmployer();
-  $onBehalfEmployer->hook_preProcess($formName, $form);
+  $hookAlterations = CRM_Reasonable_Util::getHookAlterations('preProcess');
+  foreach ($hookAlterations as $hookAlteration) {
+    $hookAlteration->hook_preProcess($formName, $form);
+  }
 }
 
 /**
@@ -51,6 +53,8 @@ function reasonable_civicrm_postProcess(string $formName, \CRM_Core_Form $form):
   // when I tried this today, I found that if we use that approach, civicrm won't
   // fire the postProcess hook for the form 'CRM_Contribute_Form_Contribution_Confirm',
   // which is exactly the thing we need here. So we have to use old-school hooks.
-  $onBehalfEmployer = new CRM_Reasonable_Alteration_OnBehalfEmployer();
-  $onBehalfEmployer->hook_postProcess($formName, $form);
+  $hookAlterations = CRM_Reasonable_Util::getHookAlterations('postProcess');
+  foreach ($hookAlterations as $hookAlteration) {
+    $hookAlteration->hook_postProcess($formName, $form);
+  }
 }

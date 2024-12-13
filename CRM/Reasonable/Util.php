@@ -6,12 +6,16 @@
  */
 
 /**
- * Description of Util
+ * Utilities for Reasonable extension
  *
- * @author as
  */
 class CRM_Reasonable_Util {
-  public static function getAlterations() {
+  
+  /**
+   * Get a list of class names for all alterations defined under CRM/Reasonable/Alteration.
+   * @return array
+   */
+  public static function getAlterationClasses() {
     if (empty(Civi::$statics[__METHOD__])) {
       $origClasses = get_declared_classes();
 
@@ -29,5 +33,26 @@ class CRM_Reasonable_Util {
     }
     return Civi::$statics[__METHOD__];
   }
-
+  
+  /** For a given hook, return all alteration objects which implement that hook.
+   * 
+   * @param string $hookBaseFilter E.g. 'preProcess'
+   * @return array Alteration objects implementing the given hook.
+   */
+  public static function getHookAlterations($hookBaseFilter) {
+    if (!isset(Civi::$statics[__METHOD__])) {
+      Civi::$statics[__METHOD__] = [];
+      $reasonableAlterationClasses = self::getAlterationClasses();
+      foreach ($reasonableAlterationClasses as $reasonableAlterationClass) {
+        $obj = CRM_Reasonable_Alteration::singleton($reasonableAlterationClass);
+        $hooks = $obj->getHooks();
+        foreach ($hooks as $hook) {
+          Civi::$statics[__METHOD__][$hook][] = $obj;
+        }
+      }
+    }
+    return Civi::$statics[__METHOD__][$hookBaseFilter];
+  }
+  
+  
 }
