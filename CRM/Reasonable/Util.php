@@ -10,7 +10,7 @@
  *
  */
 class CRM_Reasonable_Util {
-  
+
   /**
    * Get a list of class names for all alterations defined under CRM/Reasonable/Alteration.
    * @return array
@@ -33,9 +33,10 @@ class CRM_Reasonable_Util {
     }
     return Civi::$statics[__METHOD__];
   }
-  
-  /** For a given hook, return all alteration objects which implement that hook.
-   * 
+
+  /**
+   * For a given hook, return all alteration objects which implement that hook.
+   *
    * @param string $hookBaseFilter E.g. 'preProcess'
    * @return array Alteration objects implementing the given hook.
    */
@@ -53,6 +54,5 @@ class CRM_Reasonable_Util {
     }
     return Civi::$statics[__METHOD__][$hookBaseFilter];
   }
-  
-  
+
 }

@@ -6,14 +6,16 @@
  * @author as
  */
 class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alteration {
-  
+
   /**
+   * @var string
    * The title of this alteration, to appear in extension settings.
    * (Translation is handled elsewhere, so don't use ts() here.
    */
-  protected $title = 'Do not update Current Employer when an "On Behalf Of" contribution is submitted.';
-  
+  public $title = 'Do not update Current Employer when an "On Behalf Of" contribution is submitted.';
+
   /**
+   * @var string
    * The description of this alteration, to appear in extension settings.
    * (Translation is handled elsewhere, so don't use ts() here.
    */
@@ -25,7 +27,7 @@ class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alterati
    *
    * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
    */
-  function hook_preProcess(string $formName, \CRM_Core_Form $form): void {
+  public function hook_preProcess(string $formName, \CRM_Core_Form $form): void {
     if (!$this->isEnabled) {
       return;
     }
@@ -35,7 +37,7 @@ class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alterati
         $employer_id = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'employer_id');
         $form->set('reasonable_original_employer_id', $employer_id);
       }
-    }  
+    }
   }
 
   /**
@@ -44,7 +46,7 @@ class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alterati
    *
    * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postProcess
    */
-  function hook_postProcess(string $formName, \CRM_Core_Form $form): void {
+  public function hook_postProcess(string $formName, \CRM_Core_Form $form): void {
     if (!$this->isEnabled) {
       return;
     }
@@ -56,6 +58,7 @@ class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alterati
         $currentEmpParams[$contactID] = $employer_id;
         CRM_Contact_BAO_Contact_Utils::setCurrentEmployer($currentEmpParams);
       }
-    }  
+    }
   }
+
 }

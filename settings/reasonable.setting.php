@@ -8,7 +8,7 @@ $ret = [];
 // Get a list of all alterations available in this extension.
 $reasonableAlterationClasses = CRM_Reasonable_Util::getAlterationClasses();
 
-// Add each alteration as a checkbox setting with a predictable name and 
+// Add each alteration as a checkbox setting with a predictable name and
 // with the title/description defined by the alteration class.
 foreach ($reasonableAlterationClasses as $reasonableAlterationClass) {
   $obj = CRM_Reasonable_Alteration::singleton($reasonableAlterationClass);
