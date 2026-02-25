@@ -54,3 +54,12 @@ function reasonable_civicrm_postProcess(string $formName, \CRM_Core_Form &$form)
   // which is exactly the thing we need here. So we have to use old-school hooks.
   CRM_Reasonable_Util::hook('postProcess', $formName, $form);
 }
+
+/**
+ * Implements hook_civicrm_buildForm().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_buildForm
+ */
+function reasonable_civicrm_buildForm(string $formName, \CRM_Core_Form &$form): void {
+  CRM_Reasonable_Util::hook('buildForm', $formName, $form);
+}

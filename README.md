@@ -8,6 +8,7 @@ basis. Each alteration must be specifically enabled in the extension settings.
 Current available alterations are:
 
 - Do not update Current Employer when an "On Behalf Of" contribution is submitted.
+- On submission of admin settings forms, reload the form instead of redirecting to /civicrm/admin
 
 ## Configuration and usage
 
