@@ -21,11 +21,9 @@ foreach ($reasonableAlterationClasses as $reasonableAlterationClass) {
     'description' => $obj->getDescription(),
     'type' => 'Boolean',
     'default' => 0,
-    'settings_pages' => array(
-      'reasonable' => array(
-        'weight' => 99,
-      ),
-    ),
+    'settings_pages' => [
+      'reasonable' => ['weight' => $obj->get('weight'),],
+    ],
     'html_type' => 'checkbox',
   ];
   unset($obj);

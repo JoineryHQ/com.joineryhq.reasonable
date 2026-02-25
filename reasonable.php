@@ -36,25 +36,21 @@ function reasonable_civicrm_enable(): void {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
  */
-function reasonable_civicrm_preProcess(string $formName, \CRM_Core_Form $form): void {
-  $hookAlterations = CRM_Reasonable_Util::getHookAlterations('preProcess');
-  foreach ($hookAlterations as $hookAlteration) {
-    $hookAlteration->hook_preProcess($formName, $form);
-  }
+function reasonable_civicrm_preProcess(string $formName, \CRM_Core_Form &$form): void {
+  CRM_Reasonable_Util::hook('preProcess', $formName, $form);
 }
 
 /**
  * Implements hook_civicrm_postProcess().
  *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postProcess
+ *
  */
-function reasonable_civicrm_postProcess(string $formName, \CRM_Core_Form $form): void {
+function reasonable_civicrm_postProcess(string $formName, \CRM_Core_Form &$form): void {
   // TODO: I'd rather have each alteration define its own hooks as event listeners,
   // so we coud simply initialize those listeners in hook_civicrm_config(). However,
   // when I tried this today, I found that if we use that approach, civicrm won't
   // fire the postProcess hook for the form 'CRM_Contribute_Form_Contribution_Confirm',
   // which is exactly the thing we need here. So we have to use old-school hooks.
-  $hookAlterations = CRM_Reasonable_Util::getHookAlterations('postProcess');
-  foreach ($hookAlterations as $hookAlteration) {
-    $hookAlteration->hook_postProcess($formName, $form);
-  }
+  CRM_Reasonable_Util::hook('postProcess', $formName, $form);
 }

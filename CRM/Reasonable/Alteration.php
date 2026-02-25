@@ -27,6 +27,15 @@ class CRM_Reasonable_Alteration {
    */
   protected $description;
 
+  /**
+   * @var int
+   * Larger weights sort toward the bottom of the list.
+   * Used for:
+   *   - Ordering of hook execution when multiple alterations implement a the same hook.
+   *   - Ordering of alterations on Settings page.
+   */
+  protected $weight;
+
   private function __construct() {
     // Determine the value of the setting for this alteration, and mark this
     // alteration object as enabled/disabled accordingly, per that setting.
@@ -45,11 +54,11 @@ class CRM_Reasonable_Alteration {
     if (!is_subclass_of($className, __CLASS__)) {
       throw new CRM_Extension_Exception("Given class name '$className' does not extend " . __CLASS__, 'does_not_extend_alteration_base_class');
     }
-    static $singleton;
-    if (!isset($singleton)) {
-      $singleton = new $className();
+    static $singletons;
+    if (!isset($singletons[$className])) {
+      $singletons[$className] = new $className();
     }
-    return $singleton;
+    return $singletons[$className];
   }
 
   /**
@@ -78,6 +87,23 @@ class CRM_Reasonable_Alteration {
       throw new CRM_Extension_Exception('Description not set for Reasonable alteration: ' . get_class($this), 'description_missing');
     }
     return E::ts($this->description);
+  }
+
+  /**
+   * Get a property from this object, via a special getter if such exists, or
+   * else just the bare property value.
+   *
+   * @param String $property
+   * @return Mixed
+   */
+  public function get($property) {
+    $methodName = 'get'. ucfirst($property);
+    if (method_exists($this, $methodName)) {
+      return call_user_func([$this, $methodName]);
+    }
+    if (property_exists($this, $property)) {
+      return $this->$property;
+    }
   }
 
   /**

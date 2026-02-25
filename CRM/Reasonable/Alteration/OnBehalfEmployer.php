@@ -22,6 +22,15 @@ class CRM_Reasonable_Alteration_OnBehalfEmployer extends CRM_Reasonable_Alterati
   protected $description = 'For contribution pages configured to allow contribution  "On Behalf Of" an organiztion: when such an "On Behalf Of" contribution is submitted, CiviCRM will, by design, set the given organization as the individual donor\'s "Current Employer." This implies that an individual would only ever contribute "On Behalf Of" their current employer. Enabling this option will prevent CiviCRM from modifying the "Current Employer" relationship in this way.';
 
   /**
+   * @var int
+   * Larger weights sort toward the bottom of the list.
+   * Used for:
+   *   - Ordering of hook execution when multiple alterations implement a the same hook.
+   *   - Ordering of alterations on Settings page.
+   */
+  protected $weight = 10;
+
+  /**
    * Event listener for hook_civicrm_preProcess().
    * This extension expects hook implementations to be named beginning with 'hook_'.
    *

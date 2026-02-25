@@ -35,24 +35,76 @@ class CRM_Reasonable_Util {
   }
 
   /**
-   * For a given hook, return all alteration objects which implement that hook.
+   * For a given hook, return all alteration objects which implement that hook,
+   *   sorted by $obj->weight
    *
-   * @param string $hookBaseFilter E.g. 'preProcess'
+   * @param string $hookBaseName E.g. 'preProcess'
    * @return array Alteration objects implementing the given hook.
    */
-  public static function getHookAlterations($hookBaseFilter) {
-    if (!isset(Civi::$statics[__METHOD__])) {
-      Civi::$statics[__METHOD__] = [];
-      $reasonableAlterationClasses = self::getAlterationClasses();
-      foreach ($reasonableAlterationClasses as $reasonableAlterationClass) {
-        $obj = CRM_Reasonable_Alteration::singleton($reasonableAlterationClass);
+  public static function getHookAlterations($hookBaseName) {
+    if (!isset(Civi::$statics[__METHOD__][$hookBaseName])) {
+      $alterations = [];
+      $alterationClasses = self::getAlterationClasses();
+      $classWeights = [];
+      foreach ($alterationClasses as $alterationClass) {
+        $obj = CRM_Reasonable_Alteration::singleton($alterationClass);
         $hooks = $obj->getHooks();
-        foreach ($hooks as $hook) {
-          Civi::$statics[__METHOD__][$hook][] = $obj;
+        if (in_array($hookBaseName, $hooks)) {
+          $classWeights[] = $obj->get('weight');
+          $alterations[] = $obj;
+        }
+      }
+      array_multisort($classWeights, $alterations);
+      Civi::$statics[__METHOD__][$hookBaseName] = $alterations;
+    }
+    return Civi::$statics[__METHOD__][$hookBaseName];
+  }
+
+  /* For a given hook, invoke the hook implementations from all enabled alterations.
+   */
+  public static function hook($hookBaseName, &$arg1 = NULL, &$arg2 = NULL, &$arg3 = NULL, &$arg4 = NULL, &$arg5 = NULL, &$arg6 = NULL) {
+    $hookAlterations = CRM_Reasonable_Util::getHookAlterations($hookBaseName);
+    foreach ($hookAlterations as $hookAlteration) {
+      // Don't fire this hook implementation unless the alteration is enabled.
+      if ($hookAlteration->get('isEnabled')) {
+        $hookArgCount = self::countArgsPerHook($hookBaseName);
+        $methodName = 'hook_' . $hookBaseName;
+        switch($hookArgCount) {
+          case 1:
+            $hookAlteration->$methodName($arg1);
+            break;
+          case 2:
+            $hookAlteration->$methodName($arg1, $arg2);
+            break;
+          case 3:
+            $hookAlteration->$methodName($arg1, $arg2, $arg3);
+            break;
+          case 4:
+            $hookAlteration->$methodName($arg1, $arg2, $arg3, $arg4);
+            break;
+          case 5:
+            $hookAlteration->$methodName($arg1, $arg2, $arg3, $arg4, $arg5);
+            break;
+          case 6:
+            $hookAlteration->$methodName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6);
+            break;
         }
       }
     }
-    return Civi::$statics[__METHOD__][$hookBaseFilter];
   }
 
+  /**
+   * For a given hook, return the number of expected arguments in a hook implementation.
+   *
+   * @param String $hookName e.g. 'preProcess'
+   * @return Int
+   */
+  private static function countArgsPerHook($hookName) {
+    static $cache = [];
+    if (!isset($cache[$hookName])) {
+      $ref = new ReflectionMethod('CRM_Utils_Hook', $hookName);
+      $cache[$hookName] = $ref->getNumberOfParameters();
+    }
+    return $cache[$hookName];
+  }
 }
