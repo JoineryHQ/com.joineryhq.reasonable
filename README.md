@@ -23,6 +23,6 @@ The extension is licensed under [GPL-3.0](LICENSE.txt).
 
 ## Support
 
-Support for this extension is handled under Joinery's ["Limited Support" policy](https://joineryhq.com/software-support-levels#limited-support).
+Support for this package is handled under Joinery's ["Limited Support" policy](https://joineryhq.com/software-support-levels#limited-support).
 
-Public issue queue for this extension: [https://github.com/JoineryHQ/com.joineryhq.reasonable/issues](https://github.com/JoineryHQ/com.joineryhq.reasonable/issues)
+Public issue queue for this package: [https://github.com/JoineryHQ/com.joineryhq.reasonable/issues](https://github.com/JoineryHQ/com.joineryhq.reasonable/issues)
