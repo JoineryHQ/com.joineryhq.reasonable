@@ -17,19 +17,14 @@ class CRM_Reasonable_Util {
    */
   public static function getAlterationClasses() {
     if (empty(Civi::$statics[__METHOD__])) {
-      $origClasses = get_declared_classes();
-
       $path = CRM_Core_Resources::singleton()->getPath('com.joineryhq.reasonable') . '/CRM/Reasonable/Alteration/';
       $files = glob($path . '/*.php');
       foreach ($files as $file) {
         require_once $file;
       }
-      $newClasses = get_declared_classes();
+      $declaredClasses = get_declared_classes();
 
-      Civi::$statics[__METHOD__] = preg_grep('/^CRM_Reasonable_Alteration_/', array_diff(
-        $newClasses,
-        $origClasses
-      ));
+      Civi::$statics[__METHOD__] = preg_grep('/^CRM_Reasonable_Alteration_/', $declaredClasses);
     }
     return Civi::$statics[__METHOD__];
   }
@@ -60,7 +55,8 @@ class CRM_Reasonable_Util {
     return Civi::$statics[__METHOD__][$hookBaseName];
   }
 
-  /* For a given hook, invoke the hook implementations from all enabled alterations.
+  /**
+   *  For a given hook, invoke the hook implementations from all enabled alterations.
    */
   public static function hook($hookBaseName, &$arg1 = NULL, &$arg2 = NULL, &$arg3 = NULL, &$arg4 = NULL, &$arg5 = NULL, &$arg6 = NULL) {
     $hookAlterations = CRM_Reasonable_Util::getHookAlterations($hookBaseName);
@@ -69,25 +65,31 @@ class CRM_Reasonable_Util {
       if ($hookAlteration->get('isEnabled')) {
         $hookArgCount = self::countArgsPerHook($hookBaseName);
         $methodName = 'hook_' . $hookBaseName;
-        switch($hookArgCount) {
+        switch ($hookArgCount) {
           case 1:
             $hookAlteration->$methodName($arg1);
             break;
+
           case 2:
             $hookAlteration->$methodName($arg1, $arg2);
             break;
+
           case 3:
             $hookAlteration->$methodName($arg1, $arg2, $arg3);
             break;
+
           case 4:
             $hookAlteration->$methodName($arg1, $arg2, $arg3, $arg4);
             break;
+
           case 5:
             $hookAlteration->$methodName($arg1, $arg2, $arg3, $arg4, $arg5);
             break;
+
           case 6:
             $hookAlteration->$methodName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6);
             break;
+
         }
       }
     }
@@ -107,4 +109,5 @@ class CRM_Reasonable_Util {
     }
     return $cache[$hookName];
   }
+
 }
