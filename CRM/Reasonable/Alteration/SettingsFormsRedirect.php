@@ -37,9 +37,11 @@ class CRM_Reasonable_Alteration_SettingsFormsRedirect extends CRM_Reasonable_Alt
    * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postProcess
    */
   public function hook_postProcess($formName, &$form) {
-    $session = CRM_Core_Session::singleton();
-    $urlPath = implode('/', $form->urlPath);
-    $session->pushUserContext(CRM_Utils_System::url($urlPath, "reset=1"));
+    if (strpos($formName, 'CRM_Admin_Form_') === 0) {
+      $session = CRM_Core_Session::singleton();
+      $urlPath = implode('/', $form->urlPath);
+      $session->pushUserContext(CRM_Utils_System::url($urlPath, "reset=1"));
+    }
   }
 
 }
