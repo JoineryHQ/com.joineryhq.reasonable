@@ -1,3 +1,8 @@
+## v1.0.4
+
+- Alteration: SettingsFormRedirect: only redirect if we would have gone to civicrm/admin/.
+
+
 ## v1.0.3
 
 - Bug-fix: Alteration "SettingsFormsRedirect" was redirecting on all forms.
