@@ -38,9 +38,15 @@ class CRM_Reasonable_Alteration_SettingsFormsRedirect extends CRM_Reasonable_Alt
    */
   public function hook_postProcess($formName, &$form) {
     if (strpos($formName, 'CRM_Admin_Form_') === 0) {
+      // This is an admin form.
       $session = CRM_Core_Session::singleton();
-      $urlPath = implode('/', $form->urlPath);
-      $session->pushUserContext(CRM_Utils_System::url($urlPath, "reset=1"));
+      $topUserContext = $session->readUserContext();
+      if ($topUserContext == "/civicrm/admin?reset=1") {
+        // This would have redirected to civicrm/admin/.
+        // Instead, we'll tell it to reload the current form.
+        $urlPath = implode('/', $form->urlPath);
+        $session->replaceUserContext(CRM_Utils_System::url($urlPath, "reset=1"));
+      }
     }
   }
 
