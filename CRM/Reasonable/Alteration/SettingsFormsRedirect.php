@@ -41,13 +41,48 @@ class CRM_Reasonable_Alteration_SettingsFormsRedirect extends CRM_Reasonable_Alt
       // This is an admin form.
       $session = CRM_Core_Session::singleton();
       $topUserContext = $session->readUserContext();
-      if ($topUserContext == "/civicrm/admin?reset=1") {
+      if (self::compareUrlPath($topUserContext, 'civicrm/admin')) {
         // This would have redirected to civicrm/admin/.
         // Instead, we'll tell it to reload the current form.
         $urlPath = implode('/', $form->urlPath);
         $session->replaceUserContext(CRM_Utils_System::url($urlPath, "reset=1"));
       }
     }
+  }
+
+  /**
+   * For a given URL, determine whether it's pointing to the given civicrm path.
+   * E.g., "Is this URL directing to "/civicrm/admin"?
+   * This is meant to
+   * - account for variances in CMS url structure (e.g. Drupal vs WordPress)
+   * - ignore leading and trailing slashes
+   *
+   * @param string $testedUrl
+   * @param string $matchCiviCrmPath
+   * @return string
+   */
+  private static function compareUrlPath(string $testedUrl, string $matchCiviCrmPath): string {
+
+    // Convert HTML entities (&amp; -> &)
+    $testedUrl = html_entity_decode($testedUrl, ENT_QUOTES);
+    $parts = parse_url($testedUrl);
+    $path = isset($parts['path'])
+      ? urldecode($parts['path'])
+      : '';
+
+    $queryParams = [];
+    if (!empty($parts['query'])) {
+      parse_str($parts['query'], $queryParams);
+    }
+    if ($queryParams['q'] ?? FALSE) {
+      $testedPath = trim($queryParams['q'], '/');
+    }
+    else {
+      $testedPath = trim($path, '/');
+    }
+
+    $matchCiviCrmPath = trim($matchCiviCrmPath, '/');
+    return ($testedPath == $matchCiviCrmPath);
   }
 
 }
