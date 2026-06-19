@@ -1,3 +1,8 @@
+## v1.0.5
+
+- Alteration: SettingsFormRedirect: improve '/civicrm/admin' URL detection for better cross-CMS support.
+
+
 ## v1.0.4
 
 - Alteration: SettingsFormRedirect: only redirect if we would have gone to civicrm/admin/.
